@@ -45,10 +45,6 @@ def chatbot(input_text):
         
 counter = 0
 
-def refresh_history():
-    # This function will trigger a page rerun to refresh the history
-    st.experimental_rerun()
-
 def main():
     global counter
     st.title("KrishiMitra: Chatbot with Intent Recognition")
@@ -93,20 +89,32 @@ def main():
     elif choice == "Conversation History":
         # Display the conversation history in a collapsible expander
         st.header("Conversation History")
+
+        # Read the conversation history from the CSV file
         with open('chat_log.csv', 'r', encoding='utf-8') as csvfile:
             csv_reader = csv.reader(csvfile)
             next(csv_reader)  # Skip the header row
             rows = list(csv_reader)
 
-        # Show the latest conversation history
-        for row in reversed(rows):  # To show the latest conversations first
+        # Display the conversation history
+        for row in reversed(rows):  # Show the latest conversations first
             st.text(f"User: {row[0]}")
             st.text(f"Chatbot: {row[1]}")
             st.text(f"Timestamp: {row[2]}")
             st.markdown("---")
 
-        # Add a refresh button to reload the conversation history
-        st.button("Refresh History", on_click=refresh_history)
+        # Allow user to refresh by setting a session state variable
+        if 'refresh_history' not in st.session_state:
+            st.session_state['refresh_history'] = False
+
+        # Check if the user wants to refresh
+        if st.button("Refresh History"):
+            st.session_state['refresh_history'] = True
+            st.experimental_rerun()  # Rerun the app to reload the history
+
+        # Reset the session state variable if not refreshing
+        if st.session_state['refresh_history']:
+            st.session_state['refresh_history'] = False
 
     # About Menu
     elif choice == "About":
