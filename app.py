@@ -45,6 +45,10 @@ def chatbot(input_text):
         
 counter = 0
 
+def refresh_history():
+    # This function will trigger a page rerun to refresh the history
+    st.experimental_rerun()
+
 def main():
     global counter
     st.title("KrishiMitra: Chatbot with Intent Recognition")
@@ -102,7 +106,7 @@ def main():
             st.markdown("---")
 
         # Add a refresh button to reload the conversation history
-        st.button("Refresh History", on_click=st.experimental_rerun)
+        st.button("Refresh History", on_click=refresh_history)
 
     # About Menu
     elif choice == "About":
