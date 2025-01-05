@@ -67,7 +67,6 @@ def main():
         user_input = st.text_input("You:", key=f"user_input_{counter}")
 
         if user_input:
-
             # Convert the user input to a string
             user_input_str = str(user_input)
 
@@ -93,11 +92,17 @@ def main():
         with open('chat_log.csv', 'r', encoding='utf-8') as csvfile:
             csv_reader = csv.reader(csvfile)
             next(csv_reader)  # Skip the header row
-            for row in csv_reader:
-                st.text(f"User: {row[0]}")
-                st.text(f"Chatbot: {row[1]}")
-                st.text(f"Timestamp: {row[2]}")
-                st.markdown("---")
+            rows = list(csv_reader)
+
+        # Show the latest conversation history
+        for row in reversed(rows):  # To show the latest conversations first
+            st.text(f"User: {row[0]}")
+            st.text(f"Chatbot: {row[1]}")
+            st.text(f"Timestamp: {row[2]}")
+            st.markdown("---")
+
+        # Add a refresh button to reload the conversation history
+        st.button("Refresh History", on_click=st.experimental_rerun)
 
     # About Menu
     elif choice == "About":
